@@ -1,0 +1,10 @@
+ROOT_DIR=$(shell git rev-parse --show-toplevel)
+BIN_DIR=$(ROOT_DIR)/bin
+SRC_DIR=$(ROOT_DIR)/src
+
+CXX=g++-5
+CXXFLAGS=-std=c++14 -Wall -mcx16 -I$(SRC_DIR) -MMD -MP
+LDFLAGS=-fcilkplus -lcilkrts
+PARALLEL_FLAGS=-fcilkplus -lcilkrts -DCILK
+
+RM=rm -f

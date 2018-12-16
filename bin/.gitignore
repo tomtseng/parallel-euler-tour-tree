@@ -1,0 +1,5 @@
+# Ignore everything in this directory except this file. We want this directory
+# to show up in the git repo so that Makefiles can put files in bin/, which is
+# why we do this instead of gitignoring bin/ altogether.
+*
+!.gitignore

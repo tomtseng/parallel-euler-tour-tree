@@ -1,0 +1,9 @@
+*.o
+*.d
+.ycm_extra_conf.py
+
+*.swp
+*.swo
+*~
+
+times/

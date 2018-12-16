@@ -1,0 +1,33 @@
+This code is implemented as part of the paper "A Simple and Practical
+Linear-Work Parallel Algorithm for Connectivity" by Julian Shun,
+Laxman Dhulipala and Guy Blelloch, in Proceedings of the ACM Symposium
+on Parallelism in Algorithms and Architectures (SPAA), 2014.
+
+The code uses many files developed as part of the Problem Based
+Benchmark Suite (PBBS) (http://www.cs.cmu.edu/~pbbs).
+
+Compilation: To compile the parallel code, define the environment
+variable GCILK to use the g++ compiler with CilkPlus enabled (see
+installation instructions at www.cilkplus.org/build-gcc-cilkplus). If
+GCILK is not defined, then g++ will compile the code without
+parallelism. The code has been tested with g++ version 4.8.0. The
+default integer size is 32 bytes. To compile with 64 byte integers,
+define the environment variable LONG before compiling.  Then go into
+one of the implementation directories and type "make". The executable
+named "CC" will be generated.
+
+The connected components implementations (CC) takes as input a graph
+file in the PBBS adjacency list format
+(http://www.cs.cmu.edu/~pbbs/benchmarks/graphIO.html), and the graph
+should be symmetric. An optional argument "-r" followed by an integer
+may be provided to specify the number of rounds to run the algorithm
+for (the default is 1 round). An optional argument "-b" followed by a
+float between 0 and 1 specifies the value of beta to use (the default
+is 0.1). For example, "./CC -r 3 graphName" runs the implementation on
+the graph titled graphName for 3 rounds with a beta value of 0.1, and
+"./CC -b 0.05 graphName" runs the implementation on the graph titled
+graphName for 1 round with a beta value of 0.05. Typing "numactl -i
+all" before the program name may give better performance.
+
+Please direct any questions or comments to Julian Shun at
+jshun@cs.cmu.edu.
