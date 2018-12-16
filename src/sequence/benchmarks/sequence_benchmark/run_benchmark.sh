@@ -7,7 +7,7 @@ threads=(1 2 4 8 16 32 64 72 144)
 iters=3
 
 sequential_targets=(skip_list splay_tree)
-bin_dir=$(git rev-parse --show-toplevel)/code/bin
+bin_dir=$(git rev-parse --show-toplevel)/bin
 time_dir=times
 threads_times_output=${time_dir}/threads.txt
 batch_times_output=${time_dir}/batch.txt

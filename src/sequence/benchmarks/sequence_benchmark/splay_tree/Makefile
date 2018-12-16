@@ -1,4 +1,4 @@
-ROOT_DIR=$(shell git rev-parse --show-toplevel)/code
+ROOT_DIR=$(shell git rev-parse --show-toplevel)
 include $(ROOT_DIR)/Makefile.common
 TARGET=benchmark_sequence_splay_tree
 OBJS=$(TARGET).o $(SRC_DIR)/sequence/splay_tree/src/splay_tree.o

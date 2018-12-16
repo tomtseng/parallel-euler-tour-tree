@@ -1,4 +1,4 @@
-ROOT_DIR=$(shell git rev-parse --show-toplevel)/code
+ROOT_DIR=$(shell git rev-parse --show-toplevel)
 include $(ROOT_DIR)/Makefile.common
 TARGET=test_treap
 OBJS=$(TARGET).o $(SRC_DIR)/sequence/parallel_treap/src/treap.o

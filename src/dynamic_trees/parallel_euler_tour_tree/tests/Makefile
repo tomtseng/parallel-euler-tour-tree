@@ -1,5 +1,4 @@
-
-ROOT_DIR=$(shell git rev-parse --show-toplevel)/code
+ROOT_DIR=$(shell git rev-parse --show-toplevel)
 include $(ROOT_DIR)/Makefile.common
 TARGET=test_parallel_euler_tour_tree
 OBJS=$(TARGET).o \

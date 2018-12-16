@@ -1,4 +1,4 @@
-ROOT_DIR=$(shell git rev-parse --show-toplevel)/code
+ROOT_DIR=$(shell git rev-parse --show-toplevel)
 include $(ROOT_DIR)/Makefile.common
 TARGET=benchmark_dynamic_trees_link_cut_tree
 OBJS=$(TARGET).o \

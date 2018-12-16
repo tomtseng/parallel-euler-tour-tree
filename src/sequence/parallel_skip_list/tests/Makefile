@@ -1,4 +1,4 @@
-ROOT_DIR=$(shell git rev-parse --show-toplevel)/code
+ROOT_DIR=$(shell git rev-parse --show-toplevel)
 include $(ROOT_DIR)/Makefile.common
 
 TEST_AUG_OBJS=test_parallel_augmented_skip_list.o \

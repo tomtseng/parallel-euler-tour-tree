@@ -8,7 +8,7 @@ output_directory = "data/graphs/"
 subprocess.check_call(["make"])
 bin_directory = \
     subprocess.check_output(['git', 'rev-parse', '--show-toplevel'])[:-1]  \
-        + '/code/bin'
+        + '/bin'
 
 for n in num_vertices:
     for graph in graphs:

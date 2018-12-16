@@ -6,7 +6,7 @@ batch_sizes=(100 1000 10000 100000 1000000 10000000 99999999)
 threads=(1 2 4 8 16 32 64 72 144)
 iters=3
 
-bin_dir=$(git rev-parse --show-toplevel)/code/bin
+bin_dir=$(git rev-parse --show-toplevel)/bin
 time_dir=times
 threads_times_output=${time_dir}/threads.txt
 batch_times_output=${time_dir}/batch-shuffle.txt

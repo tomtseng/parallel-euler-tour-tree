@@ -6,7 +6,7 @@ iters=3
 graphs=('binary_tree' 'star' 'path' 'recursive_tree')
 
 sequential_targets=('link_cut_tree' 'skip_list_ett' 'splay_tree_ett')
-bin_dir=$(git rev-parse --show-toplevel)/code/bin
+bin_dir=$(git rev-parse --show-toplevel)/bin
 graphs_dir='data/graphs'
 output_dir='times'
 

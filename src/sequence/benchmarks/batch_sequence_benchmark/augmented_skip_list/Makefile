@@ -1,4 +1,4 @@
-ROOT_DIR=$(shell git rev-parse --show-toplevel)/code
+ROOT_DIR=$(shell git rev-parse --show-toplevel)
 include $(ROOT_DIR)/Makefile.common
 TARGET=benchmark_batch_sequence_augmented_skip_list
 OBJS=$(TARGET).o $(SRC_DIR)/sequence/skip_list/src/augmented_skip_list.o
