@@ -1,7 +1,7 @@
 # Batch-parallel Euler tour trees
 
-This is the code for the ALENEX 2019 paper _Batch-Parallel Euler Tour Trees_
-([arXiv link](https://arxiv.org/abs/1810.10738)).
+This is the code for the ALENEX 2019 paper [Batch-Parallel Euler Tour
+Trees](https://arxiv.org/abs/1810.10738).
 
 The items of interest in this repository are the implementations of the
 batch-parallel skip list (`src/sequence/parallel_skip_list`) and the
@@ -22,11 +22,12 @@ in `bin/`.
 
 ### Skip lists
 
-In `src/sequence/parallel_skip_list`, we implement batch-parallel skip lists
-supporting _joining_ (concatenating two sequences) and _splitting_ (cleaving a
-sequence into two at a chosen point).  These skip lists can execute a batch of
-_k_ joins, _k_ splits, or _k_ augmented value updates over _n_ elements in _O(k
-log(1 + n/k))_ expected work and _O(log n)_ depth with high probability.
+In `src/sequence/parallel_skip_list`, we implement both augmented and
+unaugmented batch-parallel skip lists supporting _joining_ (concatenating two
+sequences) and _splitting_ (cleaving a sequence into two at a chosen point).
+The skip lists can execute a batch of _k_ joins, _k_ splits, or _k_ augmented
+value updates over _n_ elements in _O(k log(1 + n/k))_ expected work and _O(log
+n)_ depth with high probability.
 
 In addition, the unaugmented skip lists are _phase-concurrent_. Informally, what
 this means that instead of having to organize calls into a batch and feed them
@@ -54,7 +55,7 @@ implement this with some simplifying modifications in
 * We should try building Euler tour trees on top of augmented skip lists instead
   of unaugmented ones and support querying of sizes of trees in the represented
   forest.
-* There are at most 3n - 2 elements in an Euler tour tree at any given time. Can
+* There are at most _3n - 2_ elements in an Euler tour tree at any given time. Can
   we get noticeably better performance by preallocating these elements at
   initialization and reusing them instead of repeatedly allocating and
   deallocating them?
