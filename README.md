@@ -49,9 +49,7 @@ implement this with some simplifying modifications in
 
 ## Future work on this repository
 * Currently the augmented skip list only augments with the size of the list.
-  We should allow the user to specify the augmentation function. We should also
-  add a function for querying augmented values over contiguous subsequences in
-  the list.
+  We should allow the user to specify the augmentation function.
 * We should try building Euler tour trees on top of augmented skip lists instead
   of unaugmented ones and support querying of sizes of trees in the represented
   forest.
@@ -59,6 +57,8 @@ implement this with some simplifying modifications in
   we get noticeably better performance by preallocating these elements at
   initialization and reusing them instead of repeatedly allocating and
   deallocating them?
+* Better tests should be written, and the tests should be migrated to Google
+  Test or another nice testing framework.
 * The parallel skip list and parallel Euler tour tree code has been cleaned up,
   but all the rest of the code in this repository is in a poorer state.
 * The build system consists of lots of Makefiles. The Makefiles perform
