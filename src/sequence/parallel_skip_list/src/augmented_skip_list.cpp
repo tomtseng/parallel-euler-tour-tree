@@ -49,39 +49,6 @@ AugmentedElement::~AugmentedElement() {
   val_allocator->Free(values_, height_);
 }
 
-int AugmentedElement::GetSum() const {
-  // Here we use knowledge of the implementation of `FindRepresentative()`.
-  // `FindRepresentative()` gives some element that reaches the top level of the
-  // list. For acyclic lists, the element is the leftmost one.
-  AugmentedElement* root{FindRepresentative()};
-  // Sum the values across the top level of the list.
-  int level{root->height_ - 1};
-  int sum{root->values_[level]};
-  AugmentedElement* curr{root->neighbors_[level].next};
-  while (curr != nullptr && curr != root) {
-    sum += curr->values_[level];
-    curr = curr->neighbors_[level].next;
-  }
-  if (curr == nullptr) {
-    // The list is not circular, so we need to traverse backwards to beginning
-    // of list and sum values to the left of `root`.
-    curr = root;
-    while (true) {
-      while (level >= 0 && curr->neighbors_[level].prev == nullptr) {
-        level--;
-      }
-      if (level < 0) {
-        break;
-      }
-      while (curr->neighbors_[level].prev != nullptr) {
-        curr = curr->neighbors_[level].prev;
-        sum += curr->values_[level];
-      }
-    }
-  }
-  return sum;
-}
-
 void AugmentedElement::UpdateTopDownSequential(int level) {
   if (level == 0) {
     if (height_ == 1) {
@@ -249,6 +216,56 @@ void AugmentedElement::BatchSplit(AugmentedElement** splits, int len) {
   parallel_for (int i = 0; i < len; i++) {
     splits[i]->update_level_ = NA;
   }
+}
+
+int AugmentedElement::GetSubsequenceSum(
+    const AugmentedElement* left, const AugmentedElement* right) {
+  int level{0};
+  int sum{right->values_[level]};
+  while (left != right) {
+    level = min(left->height_, right->height_) - 1;
+    if (level == left->height_ - 1) {
+      sum += left->values_[level];
+      left = left->neighbors_[level].next;
+    } else {
+      right = right->neighbors_[level].prev;
+      sum += right->values_[level];
+    }
+  }
+  return sum;
+}
+
+int AugmentedElement::GetSum() const {
+  // Here we use knowledge of the implementation of `FindRepresentative()`.
+  // `FindRepresentative()` gives some element that reaches the top level of the
+  // list. For acyclic lists, the element is the leftmost one.
+  AugmentedElement* root{FindRepresentative()};
+  // Sum the values across the top level of the list.
+  int level{root->height_ - 1};
+  int sum{root->values_[level]};
+  AugmentedElement* curr{root->neighbors_[level].next};
+  while (curr != nullptr && curr != root) {
+    sum += curr->values_[level];
+    curr = curr->neighbors_[level].next;
+  }
+  if (curr == nullptr) {
+    // The list is not circular, so we need to traverse backwards to beginning
+    // of list and sum values to the left of `root`.
+    curr = root;
+    while (true) {
+      while (level >= 0 && curr->neighbors_[level].prev == nullptr) {
+        level--;
+      }
+      if (level < 0) {
+        break;
+      }
+      while (curr->neighbors_[level].prev != nullptr) {
+        curr = curr->neighbors_[level].prev;
+        sum += curr->values_[level];
+      }
+    }
+  }
+  return sum;
 }
 
 }  // namespace parallel_skip_list

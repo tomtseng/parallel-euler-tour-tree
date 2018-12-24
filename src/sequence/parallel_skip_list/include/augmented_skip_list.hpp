@@ -10,12 +10,10 @@ namespace parallel_skip_list {
 // hardcoded to the sum function with the value 1 assigned to each element. As
 // such, `GetSum()` returns the size of the list.
 //
-// TODO(tomtseng): Allow user to query for the sum between two elements in a
-// list.
-// TODO(tomtseng): Allow user to pass in their own arbitrary associative augmentation
-// functions. The contract for `GetSum` on a cyclic list should be that the
-// function will be applied starting from `this`, because where we begin
-// applying the function could matter for non-commutative functions.
+// TODO(tomtseng): Allow user to pass in their own arbitrary associative
+// augmentation functions. The contract for `GetSum` on a cyclic list should be
+// that the function will be applied starting from `this`, because where we
+// begin applying the function matters for non-commutative functions.
 class AugmentedElement : private ElementBase<AugmentedElement> {
   friend class ElementBase<AugmentedElement>;
  public:
@@ -26,9 +24,6 @@ class AugmentedElement : private ElementBase<AugmentedElement> {
   AugmentedElement();
   explicit AugmentedElement(size_t random_int);
   ~AugmentedElement();
-
-  // Get result of applying augmentation function over the whole list.
-  int GetSum() const;
 
   // For each `{left, right}` in the `len`-length array `joins`, concatenate the
   // list that `left` lives in to the list that `right` lives in.
@@ -47,6 +42,21 @@ class AugmentedElement : private ElementBase<AugmentedElement> {
   // `elements[i]`.
   static void BatchUpdate(
       AugmentedElement** elements, int* new_values, int len);
+
+  // Get the result of applying the augmentation function over the subsequence
+  // between `left` and `right` inclusive.
+  //
+  // `left` and `right` must live in the same list, and `left` must precede
+  // `right` in the list.
+  //
+  // This function does not modify the data structure, so it may run
+  // concurrently with other `GetSubsequenceSum` calls and const function calls.
+  static int GetSubsequenceSum(
+      const AugmentedElement* left, const AugmentedElement* right);
+
+  // Get result of applying the augmentation function over the whole list that
+  // the element lives in.
+  int GetSum() const;
 
   using ElementBase<AugmentedElement>::FindRepresentative;
   using ElementBase<AugmentedElement>::GetPreviousElement;
