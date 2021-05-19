@@ -12,9 +12,9 @@ class Element : public parallel_skip_list::ElementBase<Element> {
  public:
   Element() : parallel_skip_list::ElementBase<Element>{} {}
   explicit Element(std::pair<int, int> id, size_t random_int)
-    : parallel_skip_list::ElementBase<Element>{random_int}, id_{id}, vals_{new int[height]} {
+    : parallel_skip_list::ElementBase<Element>{random_int}, id_{id}, values_{new int[height_]} {
     const bool isVertex{id.first == id.second};
-    vals_[0] = isVertex;
+    values_[0] = isVertex;
   }
 
   // If this element represents a vertex v, then id == (v, v). Otherwise if
@@ -39,7 +39,7 @@ class Element : public parallel_skip_list::ElementBase<Element> {
   void UpdateTopDownSequential(int level);
   // Gets vertices held in child elements of this element and writes them into
   // the sequence starting at the offset. `values_` needs to be up to date.
-  void GetVerticesBelow(seq::sequence<int> s*, int offset, int level) const;
+  void GetVerticesBelow(seq::sequence<int>* s, int offset, int level) const;
   // Augment the skip list with the function "count the number of vertices in
   // this list" (i.e., `values_[0]` is 1 if element represents a vertex, else is
   // 0; `values_[i]` sums children's `values_[i - 1]`).
@@ -73,7 +73,7 @@ void Element::UpdateTopDown(int level) {
   }
 
   // Recursively update augmented values of children.
-  AugmentedElement* curr{this};
+  Element* curr{this};
   do {
     cilk_spawn curr->UpdateTopDown(level - 1);
     curr = curr->neighbors_[level - 1].next;
@@ -91,25 +91,25 @@ void Element::UpdateTopDown(int level) {
   values_[level] = sum;
 }
 
-void Element::GetVerticesBelow(seq::sequence s*, int level, int offset) {
+void Element::GetVerticesBelow(seq::sequence<int>* s, int offset, int level) const {
   if (level == 0) {
     if (values_[0]) {
       s[offset] = id_.first;
     }
     return;
   }
-  Element* curr{this};
+  const Element* curr{this};
   if (level <= 6) {
     // run sequentially once we're near the bottom of the list and not doing as
     // much work per thread
     do {
-      curr->GetVerticesBelowSequential(s, level - 1, offset);
+      curr->GetVerticesBelow(s, offset, level - 1);
       offset += curr->values_[level - 1];
       curr = curr->neighbors_[level - 1].next;
     } while (curr != nullptr && curr->height_ < level + 1);
   } else {  // run in parallel
     do {
-      cilk_spawn curr->GetVerticesBelowSequential(s, level - 1, offset);
+      cilk_spawn curr->GetVerticesBelow(s, offset, level - 1);
       offset += curr->values_[level - 1];
       curr = curr->neighbors_[level - 1].next;
     } while (curr != nullptr && curr->height_ < level + 1);
@@ -117,31 +117,31 @@ void Element::GetVerticesBelow(seq::sequence s*, int level, int offset) {
   }
 }
 
-seq::sequence<int> GetVertices() {
+seq::sequence<int> Element::GetVertices() {
   // get element at the top level of the list
   Element* const top_element{FindRepresentative()};
-  const int level = curr->height_ - 1;
+  const int level = top_element->height_ - 1;
 
   // fill in `values_` for all elements in list
   {
     Element* curr{top_element};
     do {
-      cilk_spawn curr->UpdateTopDown(height);
+      cilk_spawn curr->UpdateTopDown(level);
       curr = curr->neighbors_[level].next;
-    } while (curr != nullptr && curr != topElement);
+    } while (curr != nullptr && curr != top_element);
     cilk_sync;
   }
 
-  int num_vertices{0};
+  size_t num_vertices{0};
   {
     Element* curr = top_element;
     do {
       num_vertices += curr->values_[level];
       curr = curr->neighbors_[level].next;
-    } while (curr != nullptr && curr != topElement);
+    } while (curr != nullptr && curr != top_element);
   }
 
-  seq::sequence vertices{num_vertices};
+  seq::sequence<int> vertices{num_vertices};
   {
     int offset{0};
     Element* curr = top_element;
@@ -149,7 +149,7 @@ seq::sequence<int> GetVertices() {
       cilk_spawn curr->GetVerticesBelow(&vertices, level, offset);
       offset += curr->values_[level];
       curr = curr->neighbors_[level].next;
-    } while (curr != nullptr && curr != topElement);
+    } while (curr != nullptr && curr != top_element);
   }
   return vertices;
 }
