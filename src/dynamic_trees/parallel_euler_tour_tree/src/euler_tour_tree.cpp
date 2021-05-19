@@ -53,7 +53,7 @@ EulerTourTree::EulerTourTree(int num_vertices)
   Element::Initialize();
   vertices_ = pbbs::new_array_no_init<Element>(num_vertices_);
   parallel_for (int i = 0; i < num_vertices_; i++) {
-    new (&vertices_[i]) Element{randomness_.ith_rand(i)};
+    new (&vertices_[i]) Element{make_pair(i, i), randomness_.ith_rand(i)};
     // The Euler tour on a vertex v (a singleton tree) is simply (v, v).
     Element::Join(&vertices_[i], &vertices_[i]);
   }
@@ -72,9 +72,9 @@ bool EulerTourTree::IsConnected(int u, int v) const {
 
 void EulerTourTree::Link(int u, int v) {
   Element* uv{allocator.alloc()};
-  new (uv) Element{randomness_.ith_rand(0)};
+  new (uv) Element{make_pair(u, v), randomness_.ith_rand(0)};
   Element* vu = allocator.alloc();
-  new (vu) Element{randomness_.ith_rand(1)};
+  new (vu) Element{make_pair(v, u), randomness_.ith_rand(1)};
   randomness_ = randomness_.next();
   uv->twin_ = vu;
   vu->twin_ = uv;
@@ -126,9 +126,9 @@ void EulerTourTree::BatchLink(pair<int, int>* links, int len) {
     // allocate edge element
     if (u < v) {
       Element* uv{allocator.alloc()};
-      new (uv) Element{randomness_.ith_rand(2 * i)};
+      new (uv) Element{make_pair(u, v), randomness_.ith_rand(2 * i)};
       Element* vu{allocator.alloc()};
-      new (vu) Element{randomness_.ith_rand(2 * i + 1)};
+      new (vu) Element{make_pair(v, u), randomness_.ith_rand(2 * i + 1)};
       uv->twin_ = vu;
       vu->twin_ = uv;
       edges_.Insert(u, v, uv);
