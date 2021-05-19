@@ -107,6 +107,7 @@ seq::sequence<int> Element::GetVertices() {
       offset += curr->values_[level];
       curr = curr->neighbors_[level].next;
     } while (curr != nullptr && curr != top_element);
+    cilk_sync;
   }
   return vertices;
 }
