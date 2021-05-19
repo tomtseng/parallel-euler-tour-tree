@@ -70,6 +70,15 @@ bool EulerTourTree::IsConnected(int u, int v) const {
   return vertices_[u].FindRepresentative() == vertices_[v].FindRepresentative();
 }
 
+seq::sequence<int> EulerTourTree::ConnectedComponent(int v) {
+  // FindRepresentative gives us an element at the top of the skip list that v
+  // lives in.
+  const Element* topElement{vertices_[v].FindRepresentative()};
+
+  seq::sequence<int> todo{0};
+  return todo;
+}
+
 void EulerTourTree::Link(int u, int v) {
   Element* uv{allocator.alloc()};
   new (uv) Element{make_pair(u, v), randomness_.ith_rand(0)};

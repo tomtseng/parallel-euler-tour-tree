@@ -5,6 +5,7 @@
 #include <dynamic_trees/parallel_euler_tour_tree/src/edge_map.hpp>
 #include <dynamic_trees/parallel_euler_tour_tree/src/euler_tour_sequence.hpp>
 #include <utilities/include/random.h>
+#include <utilities/include/seq.h>
 
 namespace parallel_euler_tour_tree {
 
@@ -26,6 +27,9 @@ class EulerTourTree {
 
   // Returns true if `u` and `v` are in the same tree in the represented forest.
   bool IsConnected(int u, int v) const;
+  // Returns all vertices in the connected component that contains vertex `v`.
+  seq::sequence<int> ConnectedComponent(int v);
+
   // Adds edge {`u`, `v`} to forest. The addition of this edge must not create a
   // cycle in the graph.
   void Link(int u, int v);

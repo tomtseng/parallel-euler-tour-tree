@@ -23,10 +23,21 @@ class Element : public parallel_skip_list::ElementBase<Element> {
   // splice out in the current round of recursion.
   bool split_mark_{false};
 
+  // Get all vertices held in children elements of this skip list element and
+  // write them into the input sequence. Returns the number of elements written.
+  int GetVerticesBelow(seq::sequence<int>* seq);
+
  private:
   friend class parallel_skip_list::ElementBase<Element>;
   static void DerivedInitialize() {}
   static void DerivedFinish() {}
+
+  // Count the number of vertices held in child elements of this element.
+  int CountVerticesBelow();
+
+  // Counts the number of vertices below this skip list element during
+  // `GetVerticesBelow()`.
+  int acc_{0};
 };
 
 }  // namespace _internal
