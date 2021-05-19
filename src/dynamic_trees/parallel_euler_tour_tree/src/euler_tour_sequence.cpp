@@ -51,7 +51,7 @@ void Element::UpdateTopDown(int level) {
 void Element::GetVerticesBelow(seq::sequence<int>* s, int offset, int level) const {
   if (level == 0) {
     if (values_[0]) {
-      s[offset] = id_.first;
+      (*s)[offset] = id_.first;
     }
     return;
   }
@@ -103,7 +103,7 @@ seq::sequence<int> Element::GetVertices() {
     int offset{0};
     Element* curr = top_element;
     do {
-      cilk_spawn curr->GetVerticesBelow(&vertices, level, offset);
+      cilk_spawn curr->GetVerticesBelow(&vertices, offset, level);
       offset += curr->values_[level];
       curr = curr->neighbors_[level].next;
     } while (curr != nullptr && curr != top_element);
