@@ -14,7 +14,7 @@ class Element : public parallel_skip_list::ElementBase<Element> {
   explicit Element(std::pair<int, int> id, size_t random_int)
     : parallel_skip_list::ElementBase<Element>{random_int} {}
 
-  // If this element represents a vertex v, then id == (v, v).  Otherwise if
+  // If this element represents a vertex v, then id == (v, v). Otherwise if
   // this element represents a directed edge (u, v), then id == (u,v).
   std::pair<int, int> id;
   // If this element represents edge (u, v), `twin` should point towards (v, u).
