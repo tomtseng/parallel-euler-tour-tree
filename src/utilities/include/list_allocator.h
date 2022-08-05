@@ -214,10 +214,7 @@ void list_allocator<T>::init() {
 
     thread_count = __cilkrts_get_nworkers();
 
-    // Hack to account for possible allignment expansion
-    // i.e. sizeof(T) might not work -- better way?
-    block_p x;
-    _block_size = (char*) (x+1) - (char*) x;
+    _block_size = sizeof(block);
 
     // reserve initial blocks in the global pool
     reserve(default_alloc_size);
